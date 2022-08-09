@@ -1,0 +1,25 @@
+{
+    "name": "fan/laty",
+    "description": "Laravel Api Test in YAML",
+    "type": "library",
+    "require": {
+        "laravel/framework": "^9.23",
+        "phpunit/phpunit": "^9.5",
+        "symfony/config": "^6.0",
+        "symfony/finder": "^6.0",
+        "symfony/yaml": "^6.0",
+        "smalot/pdfparser": "^2.2"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Fan\\Laty\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Fan Deng",
+            "email": "leondeng@gmail.com"
+        }
+    ]
+}

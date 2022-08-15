@@ -9,12 +9,14 @@ Laravel Api Test in YAML
 - offline Job and Mail bypassing: mock anything irrelevant to Api logic, keep it fast
 
 ## Installation
+
 ```
 composer require fan/laty --dev
 ```
 
 ## Setup
 - create `tests\Api\specs\base.yml`
+
 ```
 api_controller_actions:
   base_url: https://localhost/api
@@ -23,7 +25,9 @@ api_controller_actions:
     verbosity: 0
     query: false
 ```
+
 - create `tests\Api\WebServiceTest.php`
+
 ```
 <?php
 
@@ -132,7 +136,9 @@ class WebServiceTest extends ApiTestCase
     }
 }
 ```
+
 - add script to `composer.json` scripts
+
 ```
     "test:api": [
         "php vendor/bin/phpunit tests/Api"
@@ -141,6 +147,7 @@ class WebServiceTest extends ApiTestCase
 
 ## The first Api spec
 - create `tests/Api/specs/users.yml`
+
 ```
 api_controller_actions:
   actions:
@@ -152,6 +159,7 @@ api_controller_actions:
         status_code: 401 # check the status code
 ```
 - run all specs
+
 ```
 $composer test:api
 > php vendor/bin/phpunit tests/Api
@@ -163,7 +171,9 @@ Time: 00:00.270, Memory: 18.00 MB
 
 OK (1 tests, 1 assertions)
 ```
+
 - focusing TDD
+
 ```
 composer test:api test_filter=users/show/0 "logging[verbosity]=6"
 > php vendor/bin/phpunit tests/Api 'test_filter=users/show/0' 'logging[verbosity]=6'
@@ -188,6 +198,7 @@ OK (1 test, 1 assertion)
 
 ## Authenticate and Json Check
 - update the users.yml to
+
 ```
 api_controller_actions:
   ___meta:
@@ -214,6 +225,7 @@ api_controller_actions:
 ```
 
 ## Check Queries Example
+
 ```
 > php vendor/bin/phpunit tests/Api 'test_filter=comments/show/1' 'logging[query]=true'
 PHPUnit 9.5.21 #StandWithUkraine
@@ -243,6 +255,7 @@ OK (1 test, 2 assertions)
 
 ## More Content Type Check Examples
 - CSV check
+
 ```
     -
       test_id: orders/export/1
@@ -261,7 +274,9 @@ OK (1 test, 2 assertions)
           r0.1: Customer Name
           r0.2: Legal Name
 ```
+
 - PDF check
+
 ```
     -
       test_id: print_jobs/pdf/1

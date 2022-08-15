@@ -253,7 +253,7 @@ abstract class ApiTestCase extends BaseTestCase
           $this->refreshApplication(); // refresh application for extra roles
         }
 
-        $server = $this->authencateUser($user, $server);
+        $server = $this->authenticateUser($user, $server);
         $this->log(
           sprintf('Test: %s, authencated user: %s', $test_id, $user),
           1
@@ -273,9 +273,9 @@ abstract class ApiTestCase extends BaseTestCase
     }
   }
 
-  abstract protected function authencateUser($user_name, $server);
+  abstract protected function authenticateUser($user_name, $server);
 
-  abstract protected function getAuthencatedUser();
+  abstract protected function getAuthenticatedUser();
 
   protected function doRun(
     $method,
@@ -662,7 +662,7 @@ abstract class ApiTestCase extends BaseTestCase
   }
 
   /**
-   * Assert that the flatterned JSON response has a given value.
+   * Assert that the flattened JSON response has a given value.
    *
    * @param  array|null  $data
    * @param  boolean  $negate

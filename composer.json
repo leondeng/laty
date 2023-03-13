@@ -3,7 +3,7 @@
     "description": "Laravel Api Test in YAML",
     "type": "library",
     "require": {
-        "laravel/framework": "^9.23",
+        "laravel/framework": "^8.0",
         "phpunit/phpunit": "^9.3",
         "symfony/config": "^5.0",
         "symfony/finder": "^5.0",

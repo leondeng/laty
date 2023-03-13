@@ -4,10 +4,10 @@
     "type": "library",
     "require": {
         "laravel/framework": "^9.23",
-        "phpunit/phpunit": "^9.5",
-        "symfony/config": "^6.0",
-        "symfony/finder": "^6.0",
-        "symfony/yaml": "^6.0",
+        "phpunit/phpunit": "^9.3",
+        "symfony/config": "^5.0",
+        "symfony/finder": "^5.0",
+        "symfony/yaml": "^5.0",
         "smalot/pdfparser": "^2.2"
     },
     "license": "MIT",

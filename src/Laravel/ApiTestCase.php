@@ -22,6 +22,8 @@ abstract class ApiTestCase extends BaseTestCase
   public static $test_configuration = [];
 
   private $dumper;
+  
+  public static $config_exemptions = [];
 
   public function setUp(): void
   {
@@ -58,13 +60,12 @@ abstract class ApiTestCase extends BaseTestCase
           '&',
           array_filter($GLOBALS['argv'], function ($i) {
             if (
-              in_array($i, [
-                'never',
+              in_array($i, array_merge([
                 'tests/Api',
                 'tests/coverage',
                 'tests/result/junit.xml',
                 'tests/coverage.cobertura.xml',
-              ])
+              ], static::$config_exemptions))
             ) {
               return false;
             }

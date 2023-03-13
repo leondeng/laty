@@ -59,10 +59,11 @@ abstract class ApiTestCase extends BaseTestCase
           array_filter($GLOBALS['argv'], function ($i) {
             if (
               in_array($i, [
+                'never',
                 'tests/Api',
                 'tests/coverage',
-                'shippable/testresults/junit.xml',
-                'shippable/codecoverage',
+                'tests/result/junit.xml',
+                'tests/coverage.cobertura.xml',
               ])
             ) {
               return false;

@@ -173,6 +173,7 @@ abstract class ApiTestCase extends BaseTestCase
           'parameters',
           'cookies',
           'files',
+          'seeds',
           'server',
           'content',
         ]
@@ -220,13 +221,17 @@ abstract class ApiTestCase extends BaseTestCase
   /**
    * Automatically generate a set of client call to test
    *
+   * @param array $users authenticated users
    * @param string $method HTTP method
    * @param string $uri URI
    * @param array $parameters request parameters
+   * @param array $cookies request cookies
    * @param array $files files posted
+   * @param array $seeds database seeds
    * @param array $server server parameters
    * @param string $content data posted
-   * @param array $checks checks to perform
+   * @param array $checks check criteria
+   * @param integer $test_id test id
    */
   protected function apiControllerAutomatedTest(
     $users,
@@ -235,11 +240,14 @@ abstract class ApiTestCase extends BaseTestCase
     $parameters,
     $cookies,
     $files,
+    $seeds,
     $server,
     $content,
     $checks,
     $test_id
   ) {
+    $this->loadSeeds($seeds);
+
     if (!count($users)) {
       //no users defined, public url
       $this->doRun(
@@ -276,6 +284,16 @@ abstract class ApiTestCase extends BaseTestCase
         );
       }
     }
+  }
+
+  protected function loadSeeds(array $seeds)
+  {
+    if (property_exists($this, 'testSeedersNamespace')) {
+      $seeds = array_map(function ($seed) {
+        return $this->testSeedersNamespace . '\\' . $seed;
+      }, $seeds);
+    }
+    $this->seed($seeds);
   }
 
   abstract protected function authenticateUser($user_name, $server);
@@ -371,7 +389,6 @@ abstract class ApiTestCase extends BaseTestCase
       }
     }
   }
-
 
   protected function prepareMocks(&$checks)
   {

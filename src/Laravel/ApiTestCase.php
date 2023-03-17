@@ -3,6 +3,7 @@
 namespace Fan\Laty\Laravel;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\UploadedFile;
@@ -19,6 +20,8 @@ use Mockery;
 
 abstract class ApiTestCase extends BaseTestCase
 {
+  use DatabaseTransactions;
+
   public static $test_configuration = [];
 
   private $dumper;
@@ -322,14 +325,7 @@ abstract class ApiTestCase extends BaseTestCase
 
     $this->prepareCache($checks);
 
-    $dbs = $this->dbsBeginTransaction();
-
-    $settings = $this->getConfig('logging');
-    if ($settings['query']) {
-      foreach ($dbs as $db) {
-        $db->enableQueryLog();
-      }
-    }
+    $this->enableQueryLog();
 
     $response = $kernel->handle($request);
     $testResponse = TestResponse::fromBaseResponse($response);
@@ -338,16 +334,7 @@ abstract class ApiTestCase extends BaseTestCase
 
     $kernel->terminate($request, $response);
 
-    if ($settings['query']) {
-      foreach ($dbs as $db) {
-        $this->log($db->getQueryLog(), 0);
-      }
-    }
-
-    foreach ($dbs as $db) {
-      $db->rollBack();
-      $db->disconnect(); //FIXME: prevent too many db connections error
-    }
+    $this->showQueryLog();
 
     if (class_exists('Mockery')) {
       Mockery::close();
@@ -361,13 +348,30 @@ abstract class ApiTestCase extends BaseTestCase
     }
   }
 
-  protected function dbsBeginTransaction()
+  protected function enableQueryLog()
   {
-    $db = $this->app->make('db');
-    $db->beginTransaction();
-
-    return [$db];
+    $settings = $this->getConfig('logging');
+    if ($settings['query']) {
+      $db = $this->app->make('db');
+      foreach ($this->connectionsToTransact() as $name) {
+        $connection = $db->connection($name);
+        $connection->enableQueryLog();
+      }
+    }
   }
+
+  protected function showQueryLog()
+  {
+    $settings = $this->getConfig('logging');
+    if ($settings['query']) {
+      $db = $this->app->make('db');
+      foreach ($this->connectionsToTransact() as $name) {
+        $connection = $db->connection($name);
+        $this->log($connection->getQueryLog(), 0);
+      }
+    }
+  }
+
 
   protected function prepareMocks(&$checks)
   {
